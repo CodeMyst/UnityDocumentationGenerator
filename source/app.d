@@ -53,7 +53,24 @@ private JSONValue generate (DirIterator dir, string baseLink, Type type)
 				break;
 		}
 
-		auto fullDescription = doc.getElementsByTagName ("p") [0].innerText;
+		string fullDescription = "";
+		if (type == Type.Manual)
+		{
+			fullDescription = doc.getElementsByTagName ("p") [0].innerText;
+		}
+		else if (type == Type.ScriptReference)
+		{
+			auto h2 = doc.getElementsByTagName ("h2");
+
+			foreach (h; h2)
+			{
+				if (h.innerText == "Description")
+				{
+					fullDescription = h.parentNode.childNodes [3].innerText;
+					break;
+				}
+			}
+		}
 
 		const long indexOfDot = indexOf (fullDescription, '.') + 1;
 		string description = "";
